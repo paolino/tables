@@ -1,0 +1,50 @@
+Users are notified at most once per events.
+Events are 
+  user shouts  (also available async via chat API)
+  group pass issues (a user is allowed to chat in a room)
+  group pass revokes (a user is not allowed to chat in a room anymore)
+  redaction revokes (end of the game for the stalker)
+  redaction events time flow (estimated due time)
+  redaction episodes (what's really going on as time indexes of an event)
+
+
+data Info -- what's this ?
+
+data Event = Event IndexEvent Time Info
+data Episode = Episode IndexEpisode IndexEvent Time Info
+
+data Context = CEvent Event | CEpisode Event Episode 
+
+data Room = Room IndexRoom User Info
+
+data Notification 
+  = Shout User Context Info
+  | CanChat Room
+  | Can'tChat IndexRoom
+  | Banned
+  | EventRoll Event Time
+  | EventStop Event
+  | Episode Event Episode
+
+Users must have selected at least an event to get any comments and get comments about all selected events.
+Users are always notified on new events.
+Users are always notified on episodes of selected events.
+(Users can be notified about all episodes ? -- can't scale!)
+
+
+
+
+A specific notification can happen only once.  As this is a pulling system server must track the pulling , and client must set the point of the next notification.
+
+API
+
+flush:
+
+point the notification cursor to the notification to come
+
+pull: 
+
+get next notification or exception empty queue
+
+
+
